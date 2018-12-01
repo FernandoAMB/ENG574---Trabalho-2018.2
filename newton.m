@@ -23,15 +23,24 @@
 ## Created: 2018-11-16
 
 function [x_star, f_star] = newton (fun, guess ,tol, max_iter)
-  xold = guess;
+  
+  %colocando guess no formato certo
+  if (columns(guess) > 1)
+    xold = guess';
+  else
+    xold = guess;
+  endif
+  
+  
   der = grad(fun, xold, tol);
    if (norm(der) != 0)
-    xnew = xold - grad(fun, xold, tol)'*inv(hessian(fun, xold, tol));
-    num_iter = 1;
-    while (num_iter < max_iter && (abs(xnew - xold) > tol))
+    xnew = xold - (hessian(fun, xold, tol)\grad(fun, xold, tol));
+    num_iter = 0;
+    while (num_iter < max_iter && (norm(xnew - xold) > tol))
      der = grad(fun, xold, tol);
+     
      if (norm(der) != 0)
-       xnew = xold - der'*inv(hessian(fun, xold, tol));
+       xnew = xold - hessian(fun, xold, tol)\der;
        num_iter = num_iter + 1;
        xold = xnew;
      else
@@ -43,9 +52,9 @@ function [x_star, f_star] = newton (fun, guess ,tol, max_iter)
       f_star = fun(x_star);
       return;
     endif
+   endif
     %return NaN if didn't converge
     x_star = NaN;
     f_star = NaN;
-  endif
   
 endfunction
