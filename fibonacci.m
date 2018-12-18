@@ -26,11 +26,13 @@ function [series, indice] = fibonacci (lower_bound, upper_bound, tolerance)
   delta = upper_bound - lower_bound;
   a(1) = 1;
   a(2) = 1;
-  indice = 3;
-  while (a(indice - 1) <= delta/tolerance)
-    a(indice) = a(indice-1) + a(indice-2);
+  indice = 2;
+  while (a(indice) <= delta/tolerance)
     indice = indice + 1;
+    a(indice) = a(indice-1) + a(indice-2);
   endwhile
-  series = a(2:indice - 1); % removendo o primeiro 1
-  indice = indice - 2;
+  indice = indice + 1;
+  a(indice) = a(indice-1) + a(indice-2);
+  series = a(2:indice); % removendo o primeiro 1
+  indice = indice - 1;
 endfunction

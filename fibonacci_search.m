@@ -22,27 +22,31 @@
 ## Author: Fernando <fernando@fernando-linux>
 ## Created: 2018-11-16
 
-function [lower, upper] = fibonacci_search (fun, lower_bound, upper_bound, range_tolerance)
+function [x_star, f_star, num_iter] = fibonacci_search (fun, lower_bound, upper_bound, range_tolerance)
   [series, index] = fibonacci(lower_bound, upper_bound, range_tolerance);
-  deltas = (upper_bound - lower_bound)*series(index:-1:1)/series(index) # calculo dos deltas no metodo
   alfa_lower = lower_bound;
   alfa_upper = upper_bound;
-  for i = 2:length(deltas)
-    alfa_lower_temp = alfa_lower + deltas(i);
-    alfa_upper_temp = alfa_upper - deltas(i);
-    if (fun(alfa_lower_temp) > fun(alfa_upper_temp))
-      alfa_upper = alfa_lower_temp;
-    elseif (fun(alfa_lower_temp) < fun(alfa_upper_temp))
-      alfa_lower = alfa_upper_temp;  
+  num_iter = index;
+  for i = length(series)-1:-1:1
+    fprintf("lower bound: %f, upper_bound:%f\n",alfa_lower, alfa_upper);
+    l = alfa_upper - alfa_lower;
+    delta = l*series(i)/series(index);
+    
+    x1 = alfa_lower + delta;
+    x2 = alfa_upper - delta;
+    
+    if (fun(x1) > fun(x2))
+      alfa_lower = x2;
+    elseif (fun(x1) < fun(x2))
+      alfa_upper = x1;
     endif
-    if (alfa_lower > alfa_upper)
-        temp = alfa_lower;
-        alfa_lower = alfa_upper;
-        alfa_upper = temp;
-    endif
+    fprintf("x1: %f, x2:%f\n\nf(x1) = %f, f(x2) = %f\n",x1, x2, fun(x1), fun(x2));
+
   endfor
-  lower = alfa_lower;
-  upper = alfa_upper;
+  
+  
+  x_star = (alfa_lower + alfa_upper)/2;
+  f_star = fun(x_star);
   
   
 
