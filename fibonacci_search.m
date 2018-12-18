@@ -27,6 +27,7 @@ function [x_star, f_star, num_iter] = fibonacci_search (fun, lower_bound, upper_
   alfa_lower = lower_bound;
   alfa_upper = upper_bound;
   num_iter = index;
+  delta1 = (alfa_upper - alfa_lower)
   for i = length(series)-1:-1:1
     fprintf("lower bound: %f, upper_bound:%f\n",alfa_lower, alfa_upper);
     l = alfa_upper - alfa_lower;
