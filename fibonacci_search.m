@@ -24,24 +24,27 @@
 
 function [x_star, f_star, num_iter] = fibonacci_search (fun, lower_bound, upper_bound, range_tolerance)
   [series, index] = fibonacci(lower_bound, upper_bound, range_tolerance);
+  series
   alfa_lower = lower_bound;
   alfa_upper = upper_bound;
   num_iter = index;
-  delta1 = (alfa_upper - alfa_lower)
-  for i = length(series)-1:-1:1
-    fprintf("lower bound: %f, upper_bound:%f\n",alfa_lower, alfa_upper);
-    l = alfa_upper - alfa_lower;
-    delta = l*series(i)/series(index);
-    
-    x1 = alfa_lower + delta;
-    x2 = alfa_upper - delta;
-    
+  delta(1) = (alfa_upper - alfa_lower);
+  for i = 2:index
+    delta(i) = delta(1)*series(index - i + 1)/series(index);
+  endfor
+  delta
+  x1=alfa_lower + delta(2);
+  x2=alfa_upper - delta(2);
+  for i = 3:index
     if (fun(x1) > fun(x2))
       alfa_lower = x2;
-    elseif (fun(x1) < fun(x2))
+      x2=x1;
+      x1=alfa_lower + delta(i);
+    elseif (fun(x1) <= fun(x2))
       alfa_upper = x1;
+      x1=x2;
+      x2=alfa_upper - delta(i);
     endif
-    fprintf("x1: %f, x2:%f\n\nf(x1) = %f, f(x2) = %f\n",x1, x2, fun(x1), fun(x2));
 
   endfor
   

@@ -22,7 +22,7 @@
 ## Author: Fernando <fernando@fernando-linux>
 ## Created: 2018-11-16
 
-function [x_star, f_star] = newton (fun, guess ,tol, max_iter)
+function [x_star, f_star, num_iter] = newton (fun, guess ,tol, max_iter)
   
   %colocando guess no formato certo
   if (columns(guess) > 1)
@@ -33,26 +33,23 @@ function [x_star, f_star] = newton (fun, guess ,tol, max_iter)
   
   
   der = grad(fun, xold, tol);
+  xnew = xold - (hessian(fun, xold, tol)\grad(fun, xold, tol));
+  num_iter = 0;
+  while (num_iter < max_iter && (norm(xnew - xold) > tol))
+   xold = xnew;
+   der = grad(fun, xold, tol);
    if (norm(der) != 0)
-    xnew = xold - (hessian(fun, xold, tol)\grad(fun, xold, tol));
-    num_iter = 0;
-    while (num_iter < max_iter && (norm(xnew - xold) > tol))
-     der = grad(fun, xold, tol);
-     
-     if (norm(der) != 0)
-       xnew = xold - hessian(fun, xold, tol)\der;
-       num_iter = num_iter + 1;
-       xold = xnew;
-     else
-      break;
-     endif
-    endwhile
+     xnew = xold - inv(hessian(fun, xold, tol))*der;
+     num_iter = num_iter + 1;
+   else
+    break;
+   endif
+  endwhile
     if (num_iter < max_iter)
-      x_star = xnew;
+      x_star = xold;
       f_star = fun(x_star);
       return;
     endif
-   endif
     %return NaN if didn't converge
     x_star = NaN;
     f_star = NaN;
